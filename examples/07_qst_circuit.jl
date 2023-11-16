@@ -13,7 +13,7 @@ Random.seed!(1234)
 N = 4
 depth = 4
 nshots = 10_000
-circuit = randomcircuit(N, depth)
+circuit = randomcircuit(N; depth=depth)
 data, ψ = getsamples(circuit, nshots; local_basis=["X", "Y", "Z"])
 writesamples(data, ψ, "data/qst_circuit.h5")
 
@@ -23,7 +23,7 @@ data, Ψ = readsamples("data/qst_circuit.h5")
 # Split data into a train and test dataset
 train_data, test_data = split_dataset(data; train_ratio=0.9)
 
-# Set parameters 
+# Set parameters
 N = length(Ψ)     # Number of qubits
 χ = maxlinkdim(Ψ) # Bond dimension of variational MPS
 
@@ -38,7 +38,7 @@ F(ψ::MPS; kwargs...) = fidelity(ψ, Ψ)
 obs = observer(["F" => F])
 
 # Run quantum state tomography, where a variational MPS `|ψ(θ)⟩`
-# is optimized to mimimize the cross entropy between the data and 
+# is optimized to mimimize the cross entropy between the data and
 # the tensor-network distribution `P(x) = |⟨x|ψ(θ)⟩|²`.
 println("Running tomography to learn a pure state ψ:")
 ψ = tomography(
@@ -87,7 +87,7 @@ F(ρ::LPDO; kwargs...) = fidelity(ρ, ϱ)
 obs = observer(["F" => F])
 
 # Run quantum state tomography, where a variational LPDO `ρ(θ)`
-# is optimized to mimimize the cross entropy between the data and 
+# is optimized to mimimize the cross entropy between the data and
 # the tensor-network distribution `P(x) = ⟨x|ρ(θ)|x⟩`.
 println("Running tomography to learn a mixed state ρ:")
 @disable_warn_order begin

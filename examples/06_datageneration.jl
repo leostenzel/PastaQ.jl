@@ -8,11 +8,11 @@ Random.seed!(1234)
 N = 4
 depth = 4
 nshots = 5
-circuit = randomcircuit(N, depth)
+circuit = randomcircuit(N; depth=depth)
 
 # 1. Generation of measurement data on the quantum states
 # at the output of a circuit. Each data-point is a projetive
-# measurement in an arbitrary local basis. The default local basis 
+# measurement in an arbitrary local basis. The default local basis
 # is `["X","Y","Z"]`.
 # a) Unitary circuit
 # Returns output state as MPS
@@ -46,9 +46,9 @@ display(data)
 println()
 
 # 2. Generation of measurerment data for quantum process
-# tomography. Each measurement consist of a input product 
+# tomography. Each measurement consist of a input product
 # state and an output projective measurement in a arbitrary
-# local basis. By default, the single-qubit input states are 
+# local basis. By default, the single-qubit input states are
 # the 6 eigenstates of Pauli operators.
 # Return the MPO for the unitary circuit
 println(

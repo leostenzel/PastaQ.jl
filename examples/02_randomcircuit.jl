@@ -8,10 +8,10 @@ N = 4     # Number of qubits
 depth = 4 # Depth of the quantum circuit
 
 # Generate random quantum circuit built out of
-# layers of single-qubit random rotations + `CX` 
+# layers of single-qubit random rotations + `CX`
 # gates, alternating between even and of odd layers.
 println("Random circuit of depth $depth on $N qubits:")
-circuit = randomcircuit(N, depth; twoqubitgates="CX", onequbitgates="Rn")
+circuit = randomcircuit(N; depth=depth, twoqubitgates="CX", onequbitgates="Rn")
 display(circuit)
 println()
 
@@ -32,12 +32,12 @@ U = runcircuit(circuit; process=true)
 println()
 
 # 2. Quantum circuit with noise
-# Apply a noise model `noise` (specified by appropriate 
+# Apply a noise model `noise` (specified by appropriate
 # parameters) to each quantum gate in `gates`.
 # Returns a mixed density operator as MPO:
 # `ρ = ε(|0,0,…⟩⟨0,0,…|)`
 # where `ε` is the quantum channel.
-# Here, the noise is a single-qubit amplitude damping 
+# Here, the noise is a single-qubit amplitude damping
 # channel with decay rate `γ=0.01`..
 println(
   "Running the circuit with amplitude damping to compute the state ρ = ε(|0,0,…⟩⟨0,0,…|)..."
@@ -47,7 +47,7 @@ println(
 println()
 
 # A representation of the quantum channel as a MPO
-# is obtained using the flag `process=true`, which 
+# is obtained using the flag `process=true`, which
 # returns the Choi matrix `Λ` of the channel:`:
 println(
   "Running the circuit with amplitude damping to compute the Choi matrix Λ of the quantum channel...",

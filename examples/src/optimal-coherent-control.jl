@@ -1,25 +1,25 @@
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Optimal Coherent Control
-# 
-# Quantum computers perform computations by executing circuits consisting of a 
+#
+# Quantum computers perform computations by executing circuits consisting of a
 # set of quantum gates, and recording measurement at its output. At this level
-# of abstraction, quantum gates are well-defined mathematical operations on a 
-# ``n``-qubit Hilbert space. In practice, different hardware realizations engineer a 
+# of abstraction, quantum gates are well-defined mathematical operations on a
+# ``n``-qubit Hilbert space. In practice, different hardware realizations engineer a
 # universal set of gates through ia variety of controllable sets of physical interactions between
 # the qubits. Optimal coherent control (OCC) provides is a framework whereby qubit control
-# functions can be optimized to produce a desired target quantum gate. 
+# functions can be optimized to produce a desired target quantum gate.
 #
 #
 #nb # %% a slide [markdown] {"slideshow": {"slide_type": "slide"}}
-# In this tutorial example, we consider a very simple system made out of only two qubits, 
-# described by the Hamiltonian 
+# In this tutorial example, we consider a very simple system made out of only two qubits,
+# described by the Hamiltonian
 # ```math
 # H_0 = \sum_{j=1,2}\omega_j a^\dagger_ja_j + g (a^\dagger_1a_2 + a_1 a^\dagger_2)
 # ```
-# where ``\{\omega_j\}`` are the frequencies of the transmons and ``g`` is the qubit exchange  
+# where ``\{\omega_j\}`` are the frequencies of the transmons and ``g`` is the qubit exchange
 # coupling.
 #
-# ### Trotter simulation of quantum dynamics 
+# ### Trotter simulation of quantum dynamics
 #
 # Before considering the gate optimization, we first need to simulate the dynamics of the system
 # generate by the Hamiltonian ``H``. We begin by importing the relevant packages and
@@ -33,7 +33,7 @@ using Observers
 using DataFrames
 using Plots
 
-#jl # units  
+#jl # units
 GHz = 2π
 MHz = 1e-3 * GHz
 plot_args = (
@@ -54,7 +54,7 @@ hilbert = qubits(n)
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 # Now that we have created the Hilbert space and set the parameters, we
-# can define the Hamiltonian. For now, we define it as a `Vector` of `Tuple`, 
+# can define the Hamiltonian. For now, we define it as a `Vector` of `Tuple`,
 # where each `Tuple` represent a term in the Hamiltonian. This would be normally
 # defined as an ITensor object (`OpSum`), but that is not yet fully differentiable.
 #
@@ -76,7 +76,7 @@ H = hamiltonian(ω⃗, g)
 # as the average mode occupation. We use the `Observers.jl` package to keep
 # track of observables. The `Observer` object is a container of a set of `Function`,
 # which are called iteratively inside whatever iterative loop we consider.
-# We also need to add a `Function` that measure the average occupation here. 
+# We also need to add a `Function` that measure the average occupation here.
 #
 
 #nb %% A slide [code] {"slideshow": {"slide_type": "subslide"}}
@@ -99,7 +99,7 @@ obs = observer(observables)
 # ```math
 # U(t) = U(\delta t)^M
 # ```
-# with ``t_g = M\delta t`` being the finla time. Each elementary propagator is 
+# with ``t_g = M\delta t`` being the finla time. Each elementary propagator is
 # then approximated with its Trotter expansion (to order 2 by default):
 # ```math
 # U(\delta t) \approx U_K(\delta t)\dots U_2(\delta t) U_1(\delta t)
@@ -135,7 +135,7 @@ p
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 # In this simulation we placed the two qubits on resonance (``\omega_1=\omega_2``).
-# By populating one of the qubit with an excitation (qubit 1 above), we observe that 
+# By populating one of the qubit with an excitation (qubit 1 above), we observe that
 # the dynamics swaps the excitation between the two qubits at time. In fact, this system
 # implements a perfect iSwap gate.
 #
@@ -173,7 +173,7 @@ p
 # ```math
 # f_{fourier}(\theta, t) = \Lambda \tanh(\sum_i\theta_i \sin(\pi i t /t_g))
 # ```
-# and 
+# and
 # ```math
 # f_{pulse}(\theta, t) = \tanh((t - t_{on})/\gamma) - \tanh((t - t_{off})/\gamma)
 # ```

@@ -12,7 +12,7 @@ Random.seed!(1234)
 N = 4
 depth = 4
 nshots = 10_000
-circuit = randomcircuit(N, depth)
+circuit = randomcircuit(N; depth=depth)
 
 # Generate samples
 data, U = getsamples(circuit, nshots; local_basis=["X", "Y", "Z"], process=true)

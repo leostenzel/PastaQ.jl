@@ -2,31 +2,31 @@ using PastaQ
 using ITensors
 using Printf
 
-# 1. Prepation of a thermal state 
-# 
+# 1. Prepation of a thermal state
+#
 # In this example, we show how to prepare the finite-temperature state
 # of a many-body system:
 #
 # ρ̂(β) = exp(-β Ĥ)
 #
 # where Ĥ is the Hamiltonian and β is the inverse temperature.
-# We specificallty consider the one-dimensional Ising model 
+# We specificallty consider the one-dimensional Ising model
 #
 #   H = - ∑ᵢ σᶻ(i) σᶻ(i+1) - B ∑ᵢ σˣ(i)
 #
-# where B a the transverse magnetic field. 
+# where B a the transverse magnetic field.
 
-# 1a. Custom gates 
+# 1a. Custom gates
 #
-# In order to build the thermal density operator, we implement the 
+# In order to build the thermal density operator, we implement the
 # simplest flavor of imaginary-time evolution, breaking the operator
 # exp(-βĤ) into a set of two-qubit and single-qubit gates, corresponding
-# to the Ising interactions and the transverse field respetively. The 
+# to the Ising interactions and the transverse field respetively. The
 # time evolution to inverse temperature β is broken into elementary steps
 # of size τ, where a gate is applied for each term appearing in the Hamiltonian.
 #
-# In this example, the quantum gates are not contained in the gate set of PastaQ. 
-# In order to extend, it is ony required to define the gate matrices using a 
+# In this example, the quantum gates are not contained in the gate set of PastaQ.
+# In order to extend, it is ony required to define the gate matrices using a
 # format analogous to standard gates defined in gates.jl.
 
 import PastaQ: gate
@@ -62,10 +62,10 @@ end
 # ground state.
 #
 
-# 2a. Ground state energy with DMRG 
+# 2a. Ground state energy with DMRG
 #
 # We compute the ground state energy by running DMRG
-# on the Hamiltonian MPO, whose algorithm is implemented in 
+# on the Hamiltonian MPO, whose algorithm is implemented in
 # ITensors.jl.
 
 # In order to generate the MPO for the Hamiltonian, we leverage
@@ -91,7 +91,7 @@ dmrg_cutoff = 1E-10   # Cutoff
 sweeps = Sweeps(dmrg_iter)
 maxdim!(sweeps, 10, 20, 30, 40, 50, 100)
 cutoff!(sweeps, dmrg_cutoff)
-# Run 
+# Run
 println("Running DMRG to get ground state of transverse field Ising model:")
 E, Ψ = dmrg(H, Ψ0, sweeps)
 @printf("\nGround state energy:  %.8f  \n", E)
