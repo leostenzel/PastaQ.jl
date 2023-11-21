@@ -14,8 +14,8 @@ function gate(
     error_probabilities ./= sum(error_probabilities)
     kraus_type = "Y" in pauli_ops ? Complex{Float64} : Float64
     kraus = zeros(kraus_type, 1 << N, 1 << N, size(error_probabilities)...)
-    krausinds = [Index(length(pauli_ops); tags="kraus") for _ ∈ s]
-
+    krausinds = [Index(length(pauli_ops); tags=tags(idx)) for idx ∈ s]
+    krausinds = addtags(krausinds, "kraus")
     for idx in CartesianIndices(error_probabilities)
       kraus[:, :, Tuple(idx)...] =
         √error_probabilities[idx] * reduce(kron, [gate(pauli_ops[i], SiteType("Qubit")) for i in Tuple(idx)])
@@ -28,10 +28,8 @@ is_single_qubit_noise(::GateName"pauli_channel") = false
 
 function gate(::GateName"bit_flip", st::SiteType"Qubit", s::Index...; p::Number=0.0)
   @ignore_derivatives begin
-    error_probabilities = setindex!(p / (2^length(s) - 1) * ones(ntuple(_->2, length(s))), 1-p, 1)
-    # error_probabilities = prepend!(
-    #   p / (2^length(dim.(s)) - 1) * ones(2^length(dim.(s)) - 1), 1 - p
-    # )
+    error_probabilities = p / (2^length(s) - 1) * ones(ntuple(_->2, length(s)))
+    error_probabilities[1] = one(p) - p
     return gate(
       GateName("pauli_channel"),
       st,
@@ -45,10 +43,8 @@ is_single_qubit_noise(::GateName"bit_flip") = false
 
 function gate(::GateName"phase_flip", st::SiteType"Qubit", s::Index...; p::Number=0.0)
   @ignore_derivatives begin
-    error_probabilities = setindex!(p / (2^length(s) - 1) * ones(ntuple(_->2, length(s))), 1-p, 1)
-    # error_probabilities = prepend!(
-    #   p / (2^length(dim.(s)) - 1) * ones(2^length(dim.(s)) - 1), 1 - p
-    # )
+    error_probabilities = p / (2^length(s) - 1) * ones(ntuple(_->2, length(s)))
+    error_probabilities[1] = one(p) - p
     return gate(
       GateName("pauli_channel"),
       st,
@@ -64,10 +60,8 @@ is_single_qubit_noise(::GateName"phase_flip") = false
 function gate(::GateName"DEP", st::SiteType"Qubit", s::Index...; p::Number)
   @ignore_derivatives begin
 
-    error_probabilities = setindex!(p / (4^length(s) - 1) * ones(ntuple(_->4, length(s))), 1-p, 1)
-    # prepend!(
-    #   p / (4^length(dim.(s)) - 1) * ones(4^length(dim.(s)) - 1), 1 - p
-    # )
+    error_probabilities = p / (4^length(s) - 1) * ones(ntuple(_->4, length(s)))
+    error_probabilities[1] = one(p) - p
     gate(
       GateName("pauli_channel"),
       st,
