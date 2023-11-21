@@ -126,11 +126,12 @@ function runcircuit(
   # the `choimatrix` function.
   circuit_tensors = buildcircuit(hilbert, circuit; noise, device, eltype)
   if circuit_tensors isa Vector{<:ITensor}
-    inds_sizes = [length(inds(g)) for g in circuit_tensors]
+    indices = [inds(g) for g in circuit_tensors]
   else
-    inds_sizes = vcat([[length(inds(g)) for g in layer] for layer in circuit_tensors]...)
+    indices = vcat([[inds(g) for g in layer] for layer in circuit_tensors]...)
   end
-  noiseflag = any(x -> x % 2 == 1, inds_sizes)
+
+  noiseflag = any(@. getfirst(indices, "kraus") |> !isnothing)
 
   # Unitary operator for the circuit
   if process && !noiseflag
@@ -318,8 +319,8 @@ function runcircuit(
   circuit_tensors = device(_convert_leaf_eltype(eltype, circuit_tensors))
 
   # Check if gate_tensors contains Kraus operators
-  inds_sizes = [length(inds(g)) for g in circuit_tensors]
-  noiseflag = any(x -> x % 2 == 1, inds_sizes)
+  indices = [inds(g) for g in circuit_tensors]
+  noiseflag = any(@. getfirst(indices, "kraus") |> !isnothing)
 
   if apply_dag == false && noiseflag == true
     error("noise simulation requires apply_dag=true")
@@ -426,8 +427,9 @@ function choimatrix(
   Λ₀ = unitary_mpo_to_choi_mpo(productoperator(sites))
   Λ₀ = device(_convert_leaf_eltype(eltype, Λ₀))
 
-  inds_sizes = [length(inds(g)) for g in circuit_tensors]
-  noiseflag = any(x -> x % 2 == 1, inds_sizes)
+  indices = [inds(g) for g in circuit_tensors]
+  noiseflag = any(@. getfirst(indices, "kraus") |> !isnothing)
+
   !noiseflag && error("choi matrix requires noise")
 
   for tensor in circuit_tensors
@@ -459,8 +461,8 @@ function runcircuit(
   circuit_tensors = device(_convert_leaf_eltype(eltype, circuit_tensors))
 
   # Check if gate_tensors contains Kraus operators
-  inds_sizes = [length(inds(g)) for g in circuit_tensors]
-  noiseflag = any(x -> x % 2 == 1, inds_sizes)
+  indices = [inds(g) for g in circuit_tensors]
+  noiseflag = any(@. getfirst(indices, "kraus") |> !isnothing)
 
   if apply_dag == false && noiseflag == true
     error("noise simulation requires apply_dag=true")
