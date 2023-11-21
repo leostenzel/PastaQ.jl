@@ -2,6 +2,7 @@ using PastaQ
 using ITensors
 using Test
 using Random
+ITensors.set_warn_order(15)
 
 @testset "nqubits/nlayers/ngates" begin
   @test nqubits(("H", 2)) == 2

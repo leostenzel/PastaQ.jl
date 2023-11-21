@@ -5,6 +5,8 @@ using LinearAlgebra
 using Random
 using Observers
 
+ITensors.set_warn_order(15)
+
 function state_to_int(state::Array)
   index = 0
   for j in 1:length(state)
