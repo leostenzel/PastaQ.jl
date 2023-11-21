@@ -12,7 +12,7 @@ using Random
   @test sum([E[:, :, k]' * E[:, :, k] for k in 1:size(E, 3)]) ≈ Matrix{Float64}(I, 2, 2)
   for N in 2:5
     q = siteinds("Qubit", N)
-    probs = rand(4^N)
+    probs = rand(fill(4, N)...)
     probs = probs ./ sum(probs)
     E = array(gate("pauli_channel", q...; error_probabilities=probs))
     E = reshape(E, 2^N, 2^N, length(probs))
