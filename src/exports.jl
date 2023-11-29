@@ -38,8 +38,6 @@ export
   # circuits/MPDO_circuits.jl
   MPDO,
   runcircuit_MPDO,
-  krausind,
-  krausinds,
 
   # noise.jl
   insertnoise,

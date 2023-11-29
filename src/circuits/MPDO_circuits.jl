@@ -152,7 +152,7 @@ function ITensors.product(
   kraus_kwargs[:maxdim] = pop!(kraus_kwargs, :max_kraus_dim)
 
   for idx in ns
-    k_idxs = filter(krausinds(ϕ), "n=$idx")
+    k_idxs = filter(inds(ϕ), "kraus,n=$idx")
     if length(k_idxs) > 1
       # combine
       cmb = combiner(k_idxs)
@@ -173,7 +173,3 @@ function ITensors.product(
   end
   return ψ
 end
-
-krausinds(A::ITensor) = filter(inds(A), "kraus")
-
-krausind(A::ITensor) = getfirst(inds(A), "kraus")
